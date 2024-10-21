@@ -1,7 +1,7 @@
-function App() {
-  return (
-    <div></div>
-  );
-}
+import type React from 'react';
+
+const App: React.FC = () => {
+  return <div />;
+};
 
 export default App;
