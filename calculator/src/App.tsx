@@ -1,7 +1,7 @@
 import type React from 'react';
 
-const App: React.FC = () => {
-  return <div />;
-};
+import { Calculator } from './Calculator';
 
-export default App;
+export const App: React.FC = () => {
+  return <Calculator />;
+};
