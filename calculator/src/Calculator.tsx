@@ -6,7 +6,7 @@ export const Calculator: React.FC = () => {
   const [operator, setOperator] = useState('');
 
   const chooseColor = (text: string): string => {
-    const regexp = /[0-9,]/;
+    const regexp = /[0-9.]/;
     if (text.match(regexp)) {
       return '#bbb';
     }
@@ -14,6 +14,56 @@ export const Calculator: React.FC = () => {
       return 'red';
     }
     return '#555';
+  };
+  const changeOperator = (symbol: string): void => {
+    switch (symbol) {
+      case '+':
+        setOperator('+');
+        break;
+      case '-':
+        setOperator('-');
+        break;
+      case '%':
+        setOperator('%');
+        break;
+      case '^':
+        setOperator('^');
+        break;
+      case '\u221a':
+        setOperator('sqrt');
+        break;
+      case '\u00f7':
+        setOperator('/');
+        break;
+      case '\u00d7':
+        setOperator('*');
+        break;
+      default:
+        break;
+    }
+  };
+
+  const changeDisplay = (event: React.MouseEvent<HTMLDivElement>): void => {
+    const { target } = event;
+    const symbol = target instanceof HTMLElement && target.textContent ? target.textContent : '';
+    if (symbol === 'C') {
+      setDisplay('');
+    } else if (symbol.match(/[1-9]/)) {
+      setDisplay(display + symbol);
+    } else if (symbol === '-' && !display) {
+      setDisplay('-');
+    } else if (symbol === '0' || symbol === '.') {
+      if (display) {
+        setDisplay(display + symbol);
+      }
+    } else {
+      changeOperator(symbol);
+      if (operator !== '') {
+        setDisplay(display.slice(0, display.length - 1) + symbol);
+      } else {
+        setDisplay(`${display}${symbol}`);
+      }
+    }
   };
 
   const buttonSymbols: string[] = [
@@ -34,7 +84,7 @@ export const Calculator: React.FC = () => {
     '3',
     '+',
     '0',
-    ',',
+    '.',
     'C',
     '=',
   ];
@@ -48,6 +98,9 @@ export const Calculator: React.FC = () => {
             <div
               key={item}
               className="button"
+              onClick={event => {
+                changeDisplay(event);
+              }}
               style={{ backgroundColor: chooseColor(item) }}
             >
               {item}

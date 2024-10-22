@@ -34,6 +34,8 @@ body {
   border: 3px solid black;
   display: flex;
   justify-content: end;
+  align-items: end;
+  font-size: clamp(24px, 5vw, 32px);
 }
 
 .buttons-area {
@@ -45,6 +47,7 @@ body {
   justify-content: center;
   align-items: center;
   align-content: center;
+  user-select: none;
 }
 
 .button {
