@@ -2,13 +2,19 @@ import type React from 'react';
 import { useState } from 'react';
 import { buttonSymbols } from '../shared/consts';
 import { calculation } from './calculation';
+import { changeOperator } from './changeOperator';
 
 export const Calculator: React.FC = () => {
   const [display, setDisplay] = useState('');
   const [operator, setOperator] = useState('');
   const [possiblePoint, setPossiblePoint] = useState(false);
   const [possibleOperator, setPossibleOperator] = useState(false);
-  const [possibleMinus, setPossibleMinus] = useState(false);
+  const [possibleMinus, setPossibleMinus] = useState(true);
+  const [possibleZero, setPossibleZero] = useState(false);
+  const [firstOperand, setFirstOperand] = useState(0);
+  const [secondOperand, setSecondOperand] = useState(0);
+
+  let operand = '';
 
   const chooseColor = (text: string): string => {
     const regexp = /[0-9.]/;
@@ -19,33 +25,6 @@ export const Calculator: React.FC = () => {
       return 'red';
     }
     return '#555';
-  };
-  const changeOperator = (symbol: string): void => {
-    switch (symbol) {
-      case '+':
-        setOperator('+');
-        break;
-      case '-':
-        setOperator('-');
-        break;
-      case '%':
-        setOperator('%');
-        break;
-      case '^':
-        setOperator('^');
-        break;
-      case '\u221a':
-        setOperator('sqrt');
-        break;
-      case '\u00f7':
-        setOperator('/');
-        break;
-      case '\u00d7':
-        setOperator('*');
-        break;
-      default:
-        break;
-    }
   };
 
   const changeDisplay = (event: React.MouseEvent<HTMLDivElement>): void => {
@@ -62,7 +41,7 @@ export const Calculator: React.FC = () => {
         setDisplay(display + symbol);
       }
     } else {
-      changeOperator(symbol);
+      setOperator(changeOperator(symbol));
       if (operator !== '') {
         setDisplay(display.slice(0, display.length - 1) + symbol);
       } else {
