@@ -1,4 +1,4 @@
-export   const buttonSymbols: string[] = [
+export const buttonSymbols: string[] = [
   '%',
   '^',
   '\u221a',

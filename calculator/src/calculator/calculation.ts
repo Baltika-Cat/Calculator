@@ -5,9 +5,9 @@ export const calculation = (firstOperand: number, secondOperand: number, operato
     case '-':
       return firstOperand - secondOperand;
     case '%':
-      return firstOperand / 100 * secondOperand;
+      return (firstOperand / 100) * secondOperand;
     case 'sqrt':
-      return firstOperand ** (1/secondOperand);
+      return firstOperand ** (1 / secondOperand);
     case '^':
       return firstOperand ** secondOperand;
     case '/':
@@ -17,4 +17,4 @@ export const calculation = (firstOperand: number, secondOperand: number, operato
     default:
       return 0;
   }
-}
+};

@@ -1,5 +1,6 @@
 import type React from 'react';
 import { useState } from 'react';
+
 import { buttonSymbols } from '../shared/consts';
 import { calculation } from './calculation';
 import { changeOperator } from './changeOperator';
@@ -11,10 +12,6 @@ let secondOperand = 0;
 export const Calculator: React.FC = () => {
   const [display, setDisplay] = useState('');
   const [operator, setOperator] = useState('');
-  const [possiblePoint, setPossiblePoint] = useState(false);
-  const [possibleOperator, setPossibleOperator] = useState(false);
-  const [possibleMinus, setPossibleMinus] = useState(true);
-  const [possibleZero, setPossibleZero] = useState(false);
 
   const chooseColor = (text: string): string => {
     const regexp = /[0-9.]/;
@@ -36,44 +33,52 @@ export const Calculator: React.FC = () => {
       firstOperand = 0;
       secondOperand = 0;
       setDisplay('');
-    } else if (symbol.match(/[1-9]/)) {
-      operand += symbol;
-      setDisplay(display + symbol);
+    } else if (symbol.match(/[0-9]/)) {
+      if (operand === '0') {
+        operand = symbol;
+        setDisplay(symbol);
+      } else {
+        operand += symbol;
+        setDisplay(display + symbol);
+      }
     } else if (symbol === '-' && !display) {
       operand += symbol;
       setDisplay('-');
-    } else if (symbol === '0' || symbol === '.') {
-      if (display) {
+    } else if (symbol === '-' && operand === '-') {
+      setDisplay('-');
+    } else if (symbol === '.') {
+      if (display && !operand.includes('.')) {
         operand += symbol;
         setDisplay(display + symbol);
       }
     } else if (symbol === '=') {
-      secondOperand = Number(operand);
-      setDisplay(String(calculation(firstOperand, secondOperand, operator)));
-      setOperator('');
-    } else {
-        if (operator !== '') {
-          if (operand) {
-            setOperator(changeOperator(symbol))
-            secondOperand = Number(operand);
-            console.log(true)
-            firstOperand = calculation(firstOperand, secondOperand, operator);
-            console.log(firstOperand)
-            secondOperand = 0;
-            operand = '';
-            setDisplay(firstOperand + symbol);
-          } else {
-            operand += symbol;
-            secondOperand = firstOperand;
-            setDisplay(display.slice(0, display.length - 1) + symbol);
-          }
-        } else {
-          setOperator(changeOperator(symbol));
-          firstOperand = Number(operand);
-          operand = '';
-          setDisplay(`${display}${symbol}`);
-        }
+      if (operator) {
+        secondOperand = Number(operand);
+        setDisplay(String(calculation(firstOperand, secondOperand, operator)));
+        setOperator('');
+        firstOperand = 0;
+        secondOperand = 0;
+        operand = '';
       }
+    } else if (operator !== '') {
+      if (operand) {
+        setOperator(changeOperator(symbol));
+        secondOperand = Number(operand);
+        firstOperand = calculation(firstOperand, secondOperand, operator);
+        secondOperand = 0;
+        operand = '';
+        setDisplay(String(firstOperand) + symbol);
+      } else {
+        operand += symbol;
+        secondOperand = firstOperand;
+        setDisplay(display.slice(0, display.length - 1) + symbol);
+      }
+    } else {
+      setOperator(changeOperator(symbol));
+      firstOperand = Number(operand);
+      operand = '';
+      setDisplay(`${display}${symbol}`);
+    }
   };
 
   return (
