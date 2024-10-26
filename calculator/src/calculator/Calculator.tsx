@@ -4,6 +4,10 @@ import { buttonSymbols } from '../shared/consts';
 import { calculation } from './calculation';
 import { changeOperator } from './changeOperator';
 
+let operand = '';
+let firstOperand = 0;
+let secondOperand = 0;
+
 export const Calculator: React.FC = () => {
   const [display, setDisplay] = useState('');
   const [operator, setOperator] = useState('');
@@ -11,10 +15,6 @@ export const Calculator: React.FC = () => {
   const [possibleOperator, setPossibleOperator] = useState(false);
   const [possibleMinus, setPossibleMinus] = useState(true);
   const [possibleZero, setPossibleZero] = useState(false);
-  const [firstOperand, setFirstOperand] = useState(0);
-  const [secondOperand, setSecondOperand] = useState(0);
-
-  let operand = '';
 
   const chooseColor = (text: string): string => {
     const regexp = /[0-9.]/;
@@ -31,23 +31,49 @@ export const Calculator: React.FC = () => {
     const { target } = event;
     const symbol = target instanceof HTMLElement && target.textContent ? target.textContent : '';
     if (symbol === 'C') {
+      setOperator('');
+      operand = '';
+      firstOperand = 0;
+      secondOperand = 0;
       setDisplay('');
     } else if (symbol.match(/[1-9]/)) {
+      operand += symbol;
       setDisplay(display + symbol);
     } else if (symbol === '-' && !display) {
+      operand += symbol;
       setDisplay('-');
     } else if (symbol === '0' || symbol === '.') {
       if (display) {
+        operand += symbol;
         setDisplay(display + symbol);
       }
+    } else if (symbol === '=') {
+      secondOperand = Number(operand);
+      setDisplay(String(calculation(firstOperand, secondOperand, operator)));
+      setOperator('');
     } else {
-      setOperator(changeOperator(symbol));
-      if (operator !== '') {
-        setDisplay(display.slice(0, display.length - 1) + symbol);
-      } else {
-        setDisplay(`${display}${symbol}`);
+        if (operator !== '') {
+          if (operand) {
+            setOperator(changeOperator(symbol))
+            secondOperand = Number(operand);
+            console.log(true)
+            firstOperand = calculation(firstOperand, secondOperand, operator);
+            console.log(firstOperand)
+            secondOperand = 0;
+            operand = '';
+            setDisplay(firstOperand + symbol);
+          } else {
+            operand += symbol;
+            secondOperand = firstOperand;
+            setDisplay(display.slice(0, display.length - 1) + symbol);
+          }
+        } else {
+          setOperator(changeOperator(symbol));
+          firstOperand = Number(operand);
+          operand = '';
+          setDisplay(`${display}${symbol}`);
+        }
       }
-    }
   };
 
   return (
