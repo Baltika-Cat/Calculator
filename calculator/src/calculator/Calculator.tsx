@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { buttonSymbols } from '../shared/consts';
 import { calculation } from './calculation';
 import { changeOperator } from './changeOperator';
+import { chooseClass } from './chooseClass';
 
 let operand = '';
 let firstOperand = 0;
@@ -12,17 +13,7 @@ let secondOperand = 0;
 export const Calculator: React.FC = () => {
   const [display, setDisplay] = useState('');
   const [operator, setOperator] = useState('');
-
-  const chooseColor = (text: string): string => {
-    const regexp = /[0-9.]/;
-    if (text.match(regexp)) {
-      return '#bbb';
-    }
-    if (text === '=') {
-      return 'red';
-    }
-    return '#555';
-  };
+  const [newDisplay, setNewDisplay] = useState(false);
 
   const changeDisplay = (event: React.MouseEvent<HTMLDivElement>): void => {
     const { target } = event;
@@ -89,11 +80,10 @@ export const Calculator: React.FC = () => {
           return (
             <div
               key={item}
-              className="button"
+              className={chooseClass(item)}
               onClick={event => {
                 changeDisplay(event);
               }}
-              style={{ backgroundColor: chooseColor(item) }}
             >
               {item}
             </div>

@@ -63,6 +63,18 @@ body {
   font-size: clamp(12px, 5vw, 28px);
 }
 
+.digit-button {
+  background-color: #bbb;
+}
+
+.operator-button {
+  background-color: #555;
+}
+
+.cancel-button {
+  background-color: red;
+}
+
 .button:hover {
   cursor: pointer;
   transform: scale(1.05);
