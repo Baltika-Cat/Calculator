@@ -73,8 +73,8 @@ export const Calculator: React.FC = () => {
         setDisplay(display.slice(0, -1) + symbol);
       }
     } else if (operatorsArray.includes(symbol)) {
-      setOperator(changeOperator(symbol));
       if (operand) {
+        setOperator(changeOperator(symbol));
         firstOperand = Number(operand);
         operand = '';
         setDisplay(`${display}${symbol}`);
