@@ -9,6 +9,7 @@ import { chooseClass } from './chooseClass';
 let operand = '';
 let firstOperand = 0;
 let secondOperand = 0;
+const operatorsArray = ['+', '-', '%', '^', '\u221a', '\u00f7', '\u00d7'];
 
 export const Calculator: React.FC = () => {
   const [display, setDisplay] = useState('');
@@ -24,10 +25,15 @@ export const Calculator: React.FC = () => {
       firstOperand = 0;
       secondOperand = 0;
       setDisplay('');
+    } else if (symbol.match(/[0-9]/) && newDisplay) {
+      operand = symbol;
+      firstOperand = 0;
+      setDisplay(symbol);
+      setNewDisplay(false);
     } else if (symbol.match(/[0-9]/)) {
       if (operand === '0') {
         operand = symbol;
-        setDisplay(symbol);
+        setDisplay(display.slice(0, -1) + symbol);
       } else {
         operand += symbol;
         setDisplay(display + symbol);
@@ -38,37 +44,42 @@ export const Calculator: React.FC = () => {
     } else if (symbol === '-' && operand === '-') {
       setDisplay('-');
     } else if (symbol === '.') {
-      if (display && !operand.includes('.')) {
+      if (operand && !operand.includes('.')) {
+        setNewDisplay(false);
         operand += symbol;
         setDisplay(display + symbol);
       }
     } else if (symbol === '=') {
       if (operator) {
         secondOperand = Number(operand);
-        setDisplay(String(calculation(firstOperand, secondOperand, operator)));
+        operand = String(calculation(firstOperand, secondOperand, operator));
         setOperator('');
-        firstOperand = 0;
+        setDisplay(operand);
+        firstOperand = Number(operand);
         secondOperand = 0;
-        operand = '';
+        setNewDisplay(true);
       }
-    } else if (operator !== '') {
+    } else if (operatorsArray.includes(symbol) && operator !== '') {
       if (operand) {
-        setOperator(changeOperator(symbol));
         secondOperand = Number(operand);
         firstOperand = calculation(firstOperand, secondOperand, operator);
         secondOperand = 0;
         operand = '';
+        setOperator(changeOperator(symbol));
+        setNewDisplay(false);
         setDisplay(String(firstOperand) + symbol);
       } else {
-        operand += symbol;
-        secondOperand = firstOperand;
-        setDisplay(display.slice(0, display.length - 1) + symbol);
+        setOperator(changeOperator(symbol));
+        setDisplay(display.slice(0, -1) + symbol);
       }
-    } else {
+    } else if (operatorsArray.includes(symbol)) {
       setOperator(changeOperator(symbol));
-      firstOperand = Number(operand);
-      operand = '';
-      setDisplay(`${display}${symbol}`);
+      if (operand) {
+        firstOperand = Number(operand);
+        operand = '';
+        setDisplay(`${display}${symbol}`);
+        setNewDisplay(false);
+      }
     }
   };
 
