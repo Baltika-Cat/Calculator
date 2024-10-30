@@ -1,4 +1,8 @@
-export const calculation = (firstOperand: number, secondOperand: number, operator: string): number => {
+export const calculation = (
+  firstOperand: number,
+  secondOperand: number,
+  operator: string
+): number => {
   switch (operator) {
     case '+':
       return firstOperand + secondOperand;
